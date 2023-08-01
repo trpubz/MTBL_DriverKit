@@ -1,7 +1,7 @@
 # DriverKit.py
 # by pubins.taylor
 # created 10MAY22
-# edited 31JUL23
+# edited 01AUG23
 # v0.1.0
 # Houses the generics for Selenium WebDriver for multiple uses
 import os
@@ -36,13 +36,15 @@ def DKDirBuilder(dirDownload: os.path = "root") -> os.path:
     :param dirDownload: String representation of the desired directory to download.  If nothing passed,
     defaults to the project's root directory.
     :return: the os.path which is a string
+
+    :note: this will only return a root directory if the module is ran from a subdirectory of the project's root directory and/or a virtual machine inside the project.
     """
 
     outputPath: os.path
 
     if dirDownload == "root":
-        projectRoot = os.path.dirname(__file__)
-        outputPath = projectRoot + "/temp"
+        projectRoot = find_main_py_directory(os.path.abspath(__file__))
+        outputPath = projectRoot + "/temp/"
     elif dirDownload.startswith("C:\\") or dirDownload.startswith("/Users"):
         outputPath = dirDownload
     else:
@@ -51,4 +53,14 @@ def DKDirBuilder(dirDownload: os.path = "root") -> os.path:
     return outputPath
 
 
+def find_main_py_directory(start_path: os.path) -> os.path:
+    current_path = start_path
+    while True:
+        if os.path.exists(os.path.join(current_path, 'main.py')):
+            return current_path
+        parent_path = os.path.dirname(current_path)
+        if parent_path == current_path:
+            # Reached the root directory without finding 'main.py'
+            raise FileNotFoundError("main.py not found in any parent directory")
+        current_path = parent_path
 
