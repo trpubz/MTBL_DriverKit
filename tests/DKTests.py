@@ -1,24 +1,27 @@
 import unittest
 import os
-from DriverKit import DriverKit
-import selenium
+from DriverKit import DriverKit as DK
+import selenium.webdriver
+
 
 class TestDKConfigs(unittest.TestCase):
+    def setUp(self) -> None:
+        self.test_driver: selenium.webdriver.Chrome = DK.DKDriverConfig(headless=False)
 
+    def tearDown(self) -> None:
+        self.test_driver.quit()
 
     def test_open_nonheadless(self):
-        test_driver: selenium.webdriver = DriverKit.DKDriverConfig(headless=False)
-        test_driver.get("http://www.google.com")
-        assert test_driver.title == "Google"
-        test_driver.quit()
+        self.test_driver.get("http://www.google.com")
+        assert self.test_driver.title == "Google"
 
     def test_download_dir(self):
-        driver_dir = DriverKit.DKDirBuilder()
-        os.makedirs(driver_dir, exist_ok=True)
+        root_dir = DK.DKDirBuilder()
+        os.makedirs(root_dir, exist_ok=True)
 
-        with open(os.path.join(driver_dir, "temp.py"), "w"):
-            os.remove(os.path.join(driver_dir, "temp.py"))
-        self.assertTrue(driver_dir.endswith("DriverKit/temp/"))
+        with open(os.path.join(root_dir, "temp.py"), "w"):
+            os.remove(os.path.join(root_dir, "temp.py"))
+        self.assertTrue(root_dir.endswith("DriverKit/temp/"))
 
 
 if __name__ == '__main__':

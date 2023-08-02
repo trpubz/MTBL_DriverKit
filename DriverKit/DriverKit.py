@@ -1,8 +1,8 @@
 # DriverKit.py
 # by pubins.taylor
 # created 10MAY22
-# edited 01AUG23
-# v0.1.0
+# edited 02AUG23
+# v0.1.1
 # Houses the generics for Selenium WebDriver for multiple uses
 import os
 
@@ -64,3 +64,7 @@ def find_main_py_directory(start_path: os.path) -> os.path:
             raise FileNotFoundError("main.py not found in any parent directory")
         current_path = parent_path
 
+
+def DKCheckDownloadsChrome(driver: webdriver.Chrome):
+    driver.get("chrome://settings/?search=downloads")
+    # TODO: figure out how to find 'location'
