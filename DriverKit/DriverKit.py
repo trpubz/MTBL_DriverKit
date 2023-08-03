@@ -1,16 +1,17 @@
 # DriverKit.py
 # by pubins.taylor
-# created 10MAY22
-# edited 02AUG23
-# v0.1.1
+# created 10 MAY 22
+# edited 03 AUG 23
+# v0.2.0
 # Houses the generics for Selenium WebDriver for multiple uses
 import os
+import sys
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 
 
-def DKDriverConfig(dirDownload: os.path = "root", headless=True) -> webdriver:
+def DKDriverConfig(dirDownload: os.path = "root", headless=True) -> tuple[webdriver.Chrome, str]:
     """
     Handles webdriver config management by passing the desired options as arguments.
     :param dirDownload: type os.path (string).  The driver will download files, like a .csv, to this directory.
@@ -27,7 +28,7 @@ def DKDriverConfig(dirDownload: os.path = "root", headless=True) -> webdriver:
     # ChromeDriverManager().install() downloads latest version of chrome driver to avoid compatibility issues
     driver = webdriver.Chrome(options=options, service=ChromeService())
 
-    return driver
+    return driver, downloadDir
 
 
 def DKDirBuilder(dirDownload: os.path = "root") -> os.path:
@@ -36,15 +37,13 @@ def DKDirBuilder(dirDownload: os.path = "root") -> os.path:
     :param dirDownload: String representation of the desired directory to download.  If nothing passed,
     defaults to the project's root directory.
     :return: the os.path which is a string
-
-    :note: this will only return a root directory if the module is ran from a subdirectory of the project's root directory and/or a virtual machine inside the project.
     """
 
     outputPath: os.path
 
     if dirDownload == "root":
-        projectRoot = find_main_py_directory(os.path.abspath(__file__))
-        outputPath = projectRoot + "/temp/"
+        projectRoot = os.path.dirname(os.path.realpath(sys.argv[0]))
+        outputPath = os.path.join(projectRoot, "temp/")
     elif dirDownload.startswith("C:\\") or dirDownload.startswith("/Users"):
         outputPath = dirDownload
     else:
@@ -54,6 +53,9 @@ def DKDirBuilder(dirDownload: os.path = "root") -> os.path:
 
 
 def find_main_py_directory(start_path: os.path) -> os.path:
+    """
+    Could be invoked by passing in os.path.abspath(__file__) which would find the main.py directory if this file is nested in the .venv libraries.
+    """
     current_path = start_path
     while True:
         if os.path.exists(os.path.join(current_path, 'main.py')):
