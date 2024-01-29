@@ -20,10 +20,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Set up Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+
+    - name: Set up Xvfb
+      run: |
+        sudo apt-get install -y xvfb
+        # Set up Xvfb virtual display
+        sudo Xvfb :99 -ac &
+        # Set the DISPLAY environment variable
+        echo "DISPLAY=:99" >> $GITHUB_ENV
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -40,6 +54,7 @@ jobs:
       run: |
         poetry run coverage run -m pytest
         poetry run coverage xml
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       env:
