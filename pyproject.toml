@@ -1,15 +1,18 @@
 [tool.poetry]
-name = "driverkit"
-version = "0.2.0"
+name = "mtbl-driverkit"
+version = "0.3.0"
 description = "Houses the generics for Selenium WebDriver for MTBL webscraping"
 authors = ["Taylor Pubins <tpubz@icloud.com>"]
 license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-selenium = "^4.11"
+python = "^3.12"
+selenium = "^4.16"
 
+[tool.poetry.group.test.dependencies]
+pytest = "^8.0"
+coverage = "^7.4"
 
 [build-system]
 requires = ["poetry-core"]
