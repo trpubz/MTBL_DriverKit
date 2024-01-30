@@ -8,10 +8,10 @@ class TestDKConfigs:
     driver = None
     download_dir = ""
 
-    @pytest.fixture(autouse=True)
+    @pytest.fixture
     def setup_and_teardown(self):
         # Setup code here
-        test_driver, download_dir = DK.DKDriverConfig(headless=False)
+        test_driver, download_dir = DK.dk_driver_config(headless=False)
         self.driver = test_driver
         self.download_dir = download_dir
 
@@ -19,11 +19,17 @@ class TestDKConfigs:
         # Teardown code here
         self.driver.quit()
 
-    def test_open_non_headless(self):
-        self.driver.get("http://www.google.com")
+    def test_open_non_headless(self, setup_and_teardown):
+        self.driver.get("https://www.google.com")
         assert self.driver.title == "Google"
 
-    def test_download_dir(self):
+    def test_open_headless(self):
+        test_driver, _ = DK.dk_driver_config()  # headless=True
+        test_driver.get("https://www.google.com")
+        assert test_driver.title == "Google"
+        test_driver.quit()
+
+    def test_download_dir(self, setup_and_teardown):
         root_dir = self.download_dir
         os.makedirs(root_dir, exist_ok=True)
 
@@ -31,3 +37,14 @@ class TestDKConfigs:
             os.remove(os.path.join(root_dir, "temp.py"))
         assert root_dir.endswith("/temp/")
 
+    def test_download_dir_non_root(self):
+        download_dir = DK.dk_dir_builder("/Users/tmp")
+        assert download_dir == "/Users/tmp"
+
+    def test_download_dir_error(self):
+        with pytest.raises(NotADirectoryError):
+            _ = DK.dk_dir_builder("/")
+
+    def test_find_main_py_directory_with_bad_start_path(self):
+        with pytest.raises(FileNotFoundError):
+            _ = DK.find_main_py_directory("/tmp")
