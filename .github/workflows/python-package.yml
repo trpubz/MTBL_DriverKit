@@ -5,7 +5,7 @@ name: Python package
 
 on:
   push:
-    branches: [ "main", "feat/upgrade-py3-12-1"]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
