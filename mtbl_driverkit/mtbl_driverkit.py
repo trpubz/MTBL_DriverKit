@@ -1,15 +1,13 @@
 # MTBLDriverKit.py
 # by pubins.taylor
 # created 10 MAY 22
-# edited 28 JAN 24
-# v0.3.0
+# edited 30 JAN 24
+# v0.3.1
 # Houses the generics for Selenium WebDriver for multiple uses
 import os
-import sys
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.common.by import By
 
 
 def dk_driver_config(dir_download: os.path = "root", headless=True) -> tuple[webdriver.Chrome, str]:
@@ -58,7 +56,7 @@ def find_main_py_directory(start_path: os.path) -> os.path:
     which would find the main.py directory if this file is nested in the .venv libraries.
     """
     current_path = start_path
-    while not os.path.exists(os.path.join(current_path, 'main.py')):
+    while not os.path.exists(os.path.join(current_path, '.venv')):
         parent_path = os.path.dirname(current_path)
 
         if parent_path == current_path:
