@@ -60,8 +60,8 @@ def find_main_py_directory(start_path: os.path) -> os.path:
         parent_path = os.path.dirname(current_path)
 
         if parent_path == current_path:
-            # Reached the root directory without finding 'main.py'
-            raise FileNotFoundError("main.py not found in any parent directory")
+            # Reached the root directory without finding '.venv'
+            raise FileNotFoundError(".venv not found in any parent directory")
 
         current_path = parent_path
 
