@@ -9,7 +9,9 @@ This was packaged with poetry, to install with `pip install` ensure that `MTBL-D
 * selenium>='4.16'
   * as of Selenium v4.0, Selenium Manager handles driver install/handling
 * You need to have Chrome installed for this package work off the shelf.
-* Since this package will typically be installed in a .venv, the root path search uses `.venv` os.path searching.  If you don't use .venv, make sure to create an empty directory .venv so it can find the root.
+
+## Requirements
+* you must have io read/write authority in the directory you want to run this package from
 
 ## Usage
 `from mtbl_driverkit import mtbl_driverkit as DK` in the file you wish
