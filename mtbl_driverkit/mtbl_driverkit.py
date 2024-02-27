@@ -1,27 +1,43 @@
 # MTBLDriverKit.py
 # by pubins.taylor
 # created 10 MAY 22
-# edited 1 FEB 24
-# v0.3.2
+# edited 27 FEB 24
+# v0.4.0
 # Houses the generics for Selenium WebDriver for multiple uses
 import os
+from enum import Enum
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 
 
-def dk_driver_config(invoking_module_path: os.path, headless=True) -> tuple[webdriver.Chrome, str]:
+class TempDirType(Enum):
+    APP = 0
+    TEMP = 1
+
+
+def dk_driver_config(invoking_module_path: (TempDirType, os.path), headless=True) -> tuple[
+    webdriver.Chrome,
+str]:
     """
     Handles webdriver config management by passing the desired options as arguments.
-    :param invoking_module_path: type os.path (string).  The driver will download files,
+    :param invoking_module_path: tuple of directory type and os.path.  The driver will download
+    files,
     like a .csv, to this directory.
     :param headless: boolean.  Indicates whether to draw the webdriver window.
     :return: selenium.webdriver.chrome, download directory string
     """
     options = webdriver.ChromeOptions()
 
-    project_root = find_root_directory(invoking_module_path)
-    temp_download_dir = os.path.join(project_root, "temp/")
+    # if an App path is requested, find the project root
+    # else accept the temp path a absolute
+    temp_download_dir = ""
+    match invoking_module_path[0]:
+        case TempDirType.APP:
+            project_root = find_root_directory(invoking_module_path[1])
+            temp_download_dir = os.path.join(project_root, "temp/")
+        case TempDirType.TEMP:
+            temp_download_dir = invoking_module_path[1]
 
     prefs = {"download.default_directory": temp_download_dir}
     options.add_experimental_option("prefs", prefs)

@@ -1,5 +1,7 @@
-import pytest
 import os
+import tempfile
+
+import pytest
 from mtbl_driverkit import mtbl_driverkit as DK
 
 
@@ -11,7 +13,7 @@ class TestDKConfigs:
     def setup_and_teardown(self):
         # Setup code here
         test_driver, download_dir = DK.dk_driver_config(
-            os.getcwd(),
+            (DK.TempDirType.APP, os.getcwd()),
             headless=False)
         self.driver = test_driver
         self.download_dir = download_dir
@@ -25,10 +27,17 @@ class TestDKConfigs:
         assert self.driver.title == "Google"
 
     def test_open_headless(self):
-        test_driver, _ = DK.dk_driver_config(os.getcwd())  # headless=True
+        test_driver, _ = DK.dk_driver_config((DK.TempDirType.APP, os.getcwd()))  # headless=True
         test_driver.get("https://www.google.com")
         assert test_driver.title == "Google"
         test_driver.quit()
+
+    def test_tempfile_directory_provided(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            test_driver, _ = DK.dk_driver_config((DK.TempDirType.TEMP, temp_dir), headless=False)
+            test_driver.get("https://www.google.com")
+            assert test_driver.title == "Google"
+            test_driver.quit()
 
     def test_download_dir(self, setup_and_teardown):
         root_dir = self.download_dir
