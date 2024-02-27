@@ -1,0 +1,3 @@
+[run]
+include = mtbl_driverkit/*
+omit = tests/*
