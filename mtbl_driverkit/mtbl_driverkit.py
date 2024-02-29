@@ -1,8 +1,8 @@
 # MTBLDriverKit.py
 # by pubins.taylor
 # created 10 MAY 22
-# edited 27 FEB 24
-# v0.4.0
+# edited 28 FEB 24
+# v0.4.1
 # Houses the generics for Selenium WebDriver for multiple uses
 import os
 from enum import Enum
@@ -22,7 +22,7 @@ str]:
     """
     Handles webdriver config management by passing the desired options as arguments.
     :param invoking_module_path: tuple of directory type and os.path.  The driver will download
-    files,
+    files; should typically pass __file__ as the argument
     like a .csv, to this directory.
     :param headless: boolean.  Indicates whether to draw the webdriver window.
     :return: selenium.webdriver.chrome, download directory string
@@ -56,7 +56,7 @@ def find_root_directory(start_path: os.path) -> os.path:
     find the root dir of the project
     """
     current_path = start_path
-    while not os.path.exists(os.path.join(current_path, 'app/')):
+    while not os.path.exists(os.path.join(current_path, 'app')):
         parent_path = os.path.dirname(current_path)
 
         if parent_path == current_path:

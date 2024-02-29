@@ -13,7 +13,7 @@ class TestDKConfigs:
     def setup_and_teardown(self):
         # Setup code here
         test_driver, download_dir = DK.dk_driver_config(
-            (DK.TempDirType.APP, os.getcwd()),
+            (DK.TempDirType.APP, __file__),
             headless=False)
         self.driver = test_driver
         self.download_dir = download_dir
